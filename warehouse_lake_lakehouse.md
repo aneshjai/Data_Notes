@@ -1,6 +1,6 @@
 
-**1. Data Warehouse 🏛️
-**
+**1. Data Warehouse 🏛️**
+
 • Technical Definition: An enterprise database optimized for analytical processing (OLAP) that operates on a rigid Schema-on-Write architecture. Data must be cleaned, transformed, and structured into dimensional models (Star/Snowflake schemas) before ingestion. It enforces database-level ACID compliance to guarantee data consistency.
 • Storage Mechanism: Data is stored in a centralized, proprietary storage engine using a compressed, columnar format to optimize aggregation query speed. (Examples: Snowflake, Google BigQuery).
 • Netflix Production Example: Subscriber billing and financial transaction records. Transactional records pass through ETL pipelines to validate strict relational constraints before loading. Corporate accounting teams query these immutable tables to generate mathematically flawless, uncorrupted quarterly revenue reports and SEC filings.
@@ -11,6 +11,7 @@ For Business Intelligence, Analytics reports
 Quality and Consistency for data being reliable
 Can be scalable but expensive
 EG: Snowflake, bigQry, Redshift, Databricks, ClickHouse
+
 ------------------------------------
 ***2. Data Lake 🌊***
 
@@ -27,6 +28,7 @@ Highly Scalable
 Used in AIML/ Data Science tasks on raw data
 
 EG: s3, presto, hive , hadoop
+
 ------------------------------------
 ***3. Data Lakehouse 🏡***
 • Technical Definition: An architecture that overlays an open metadata and transaction management layer directly on top of file-based object storage. By maintaining a centralized transaction log, it brings warehouse-level functionalities—including ACID transactions, schema enforcement, mutations (UPSERT/MERGE), and time-travel versioning—directly to raw files, allowing concurrent SQL and machine learning workloads on a single system.
