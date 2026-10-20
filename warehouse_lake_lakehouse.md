@@ -42,3 +42,4 @@ EG: s3, presto, hive , hadoop
 	• Low Cost & High Scalability (Leverages cheap cloud storage, eliminating data duplication).
 	• Supports Concurrent Workloads (Simultaneous BI reporting, data streaming, and AI/ML model training).
 • EG: Apache Iceberg, Delta Lake, Apache Hudi, Databricks (Unified Platform
+
