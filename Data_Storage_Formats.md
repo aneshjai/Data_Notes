@@ -2,13 +2,19 @@ Choosing the correct data storage format directly impacts storage costs, query p
 
 ## Direct Format Comparison
 
-| Format | Type | Structure | Human-Readable? | Ideal For |
-| --- | --- | --- | --- | --- |
-| CSV | Text | Row-oriented | Yes | Small data transfers, manual manipulation |
-| JSON | Text | Semi-structured / Key-value | Yes | Web APIs, application configs, raw logs |
-| Parquet | Binary | Column-oriented | No | Big Data batch analytics, BI reporting |
-| Avro | Binary | Row-oriented | No | Real-time streaming, event message buses |
-| Delta | Table Layer | Transaction-wrapped Parquet | No | Data Lakes (Lakehouses) needing database features |
+| Format | Layer | Representation | Structure / Layout | Human-Readable? | Ideal For / Primary Arena |
+| --- | --- | --- | --- | --- | --- |
+| CSV | File format | Text | Row-oriented | Yes | Small data transfers, manual manipulation |
+| JSON | File format | Text | Semi-structured / Key-value | Yes | Web APIs, application configs, raw logs |
+| Parquet | File format | Binary | Column-oriented | No | Big Data batch analytics, BI reporting |
+| Avro | File format | Binary | Row-oriented | No | Real-time streaming, event message buses |
+| ORC | File format | Binary | Columnar | - | Hadoop / Hive Warehouses |
+| Protobuf | File format | Binary | Row-based | - | Microservices (gRPC) & Network calls |
+| XML | File format | Text | Hierarchical | - | Legacy Enterprise App Integration |
+| **Table formats** |  |  |  |  |  |
+| Delta | Table format | Table layer | Transaction-wrapped Parquet | No | Data Lakes (Lakehouses) needing database features |
+| Iceberg | Table format | Metadata wrappers | Database Table | - | Open Cloud Lakehouses (Multi-engine) |
+| Hudi | Table format | Metadata wrappers | Database Table | - | High-frequency CDC / Streaming upserts |
 
 ## Detailed Breakdown & Target Use Cases
 
@@ -46,3 +52,44 @@ Delta is not a standalone file type; it is an open-source table format that pack
 
 - **The Strength:** Brings the power of traditional SQL databases straight onto cheap cloud storage. It guarantees ACID transactions (prevents corrupted or half-written records), tracks file history for "Time Travel" queries (reverting a table to how it looked yesterday), and manages schema enforcement.
 - **Best Use Case:** Data Lakehouses. Use Delta when constructing end-to-end architectures (like Medallion layers in platforms like Databricks or Microsoft Fabric) where data is constantly being updated, deleted, or merged, while multiple down-stream pipelines read from those same tables simultaneously.
+
+## Additional Major Formats & Table Layers
+
+While the formats previously covered handle the vast majority of application and transactional pipelines, a few other **critical file and table formats** are widely used across the data engineering landscape. [1], [2]
+
+They generally fall into three categories: alternative file formats, modern table formats, and legacy/hierarchical formats.
+
+### 6. Apache ORC (Optimized Row Columnar)
+
+ORC is a highly compressed, binary, **column-oriented file format**. It is conceptually almost identical to Apache Parquet. [1], [2], [3]
+
+- **The Catch:** It was built specifically for Apache Hive and the Hadoop ecosystem. While highly efficient, it has a smaller open-source community and tool ecosystem compared to Parquet.
+- **Best Use Case:** Large enterprise **analytical data warehouses built natively on Hadoop** or Hive infrastructures. [1], [2], [3]
+
+### 7. Apache Iceberg (Table Format)
+
+Like Delta Lake, Iceberg is an open-source, high-performance **table format**, not a standalone file format. It wraps around underlying Parquet or ORC files to provide database-like ACID transactions. [1], [2], [3]
+
+- **The Strength:** Iceberg provides excellent object-store abstraction. It allows query engines to safely modify tables without file-locking bottlenecks and tracks table state seamlessly across multiple computing engines.
+- **Best Use Case:** **Multi-engine cloud data lakehouses.** If your ecosystem requires Snowflake, AWS Athena, DuckDB, and Apache Spark to safely query and write to the exact same cloud storage tables simultaneously without vendor lock-in.
+
+### 8. Apache Hudi (Table Format)
+
+Hudi (Hadoop Upserts Deletes and Incrementals) is another prominent **table format**. [1]
+
+- **The Strength:** It specializes in **incremental data processing** and handles low-latency record upserts (updates/deletes) much faster than standard formats. [1]
+- **Best Use Case:** **Change Data Capture (CDC)** pipelines. Hudi is ideal when you need to continuously stream database changes from transactional systems directly into an analytical data lake in near real-time. [1]
+
+### 9. XML (eXtensible Markup Language)
+
+XML is a text-based, hierarchical format that uses custom user-defined tags to structure data. [1]
+
+- **The Catch:** It is incredibly verbose and heavy. Parsing XML is slow and highly memory-intensive compared to JSON or binary alternatives.
+- **Best Use Case:** **Legacy systems integration.** Primarily found in older enterprise web services (SOAP APIs), banking networks, configurations, and document exchange systems that have not shifted to JSON. [1]
+
+### 10. Protocol Buffers (Protobuf)
+
+Developed by Google, Protobuf is a highly optimized, strongly typed **binary serialization format**.
+
+- **The Strength:** It is incredibly small and blisteringly fast to serialize and deserialize over network calls. It requires strict schema compilation (`.proto` files) beforehand.
+- **Best Use Case:** **Microservice Communication.** It is the gold standard format for inter-service communication using gRPC or high-efficiency internal machine-to-machine streaming.
