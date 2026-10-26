@@ -25,7 +25,7 @@ Running heavy analytics directly on a live system can slow transactions for user
 
 When architecting a system, consider:
 
-- What specific use case or application are you building?
-- Do you need to support a high volume of live user writes, or heavy reporting dashboards?
+- Look at the specific use case or application are you building
+- Need to support a high volume of live user writes, or heavy reporting dashboards
 
 These requirements can help determine which database engine is the best fit.
